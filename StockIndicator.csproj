@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseWindowsForms>True</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="AxInterop.KHOpenAPI64Lib">
+      <HintPath>ref\AxInterop.KHOpenAPI64Lib.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.KHOpenAPI64Lib">
+      <HintPath>ref\Interop.KHOpenAPI64Lib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
