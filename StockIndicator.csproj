@@ -10,12 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="AxInterop.KHOpenAPI64Lib">
-      <HintPath>ref\AxInterop.KHOpenAPI64Lib.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.KHOpenAPI64Lib">
-      <HintPath>ref\Interop.KHOpenAPI64Lib.dll</HintPath>
-    </Reference>
+    <PackageReference Include="KHOpenApi.NET" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
