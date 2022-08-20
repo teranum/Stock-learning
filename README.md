@@ -1,15 +1,19 @@
 # Stock-learning
 
-°³¹ßµµ±¸: VS2022, WPF, C#
+ê°œë°œë„êµ¬: VS2022, WPF, C#
 
 Nuget: ta-lib
 
-°³¹ß¼ø¼­:
-- Å°¿òÁõ±Ç OpenApi¿¬°á
-- ta-lib¿¬°á
-- µö·¯´× ¸ðµâ ¿¬°á(¹ÌÈ®Á¤)
-- Â÷Æ®µ¥ÀÌÅÍ ºÒ·¯¿À±â/ ÁöÇ¥¿¬»ê
-- ¹éÅ×½ºÆÃ
-- ½Ç½Ã°£ ÁÖ¹® ¿¬µ¿
+ê°œë°œìˆœì„œ:
+- í‚¤ì›€ì¦ê¶Œ OpenApiì—°ê²°
+- ta-libì—°ê²°
+- ë”¥ëŸ¬ë‹ ëª¨ë“ˆ ì—°ê²°(ë¯¸í™•ì •)
+- ì°¨íŠ¸ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°/ ì§€í‘œì—°ì‚°
+- ë°±í…ŒìŠ¤íŒ…
+- ì‹¤ì‹œê°„ ì£¼ë¬¸ ì—°ë™
 
 ![](./img/run-1.png)
+
+
+# 64ë¹„íŠ¸ ê°œë°œì€ 64ë¹„íŠ¸ActiveX ì„¤ì¹˜ í•„ìš”
+https://github.com/terapark/64bit-kiwoom-openapi
