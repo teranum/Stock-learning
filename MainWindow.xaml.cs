@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,9 +10,16 @@ namespace StockIndicator
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    public struct CHART_DATAT
+    {
+        public double O, H, L, C, V, T;
+    }
     public partial class MainWindow : Window
     {
         private AxKHOpenAPI axKHOpenAPI;
+
+        public CHART_DATAT[] chart_data;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,6 +38,8 @@ namespace StockIndicator
             for (int i = 0; i < Indicators.Length; i++)
                 combo_indicator.Items.Add(Indicators[i]);
             AddLine("start");
+
+            chart_data = Array.Empty<CHART_DATAT>();
         }
 
         private void AddLine(string text)
@@ -69,13 +79,6 @@ namespace StockIndicator
             }
         }
 
-        public struct CHART_DATAT
-        {
-            public int O, H, L, C, V;
-            public Int64 T;
-        }
-        public CHART_DATAT[] chart_data;
-
         private void axKHOpenAPI_OnReceiveTrData(object sender, _DKHOpenAPIEvents_OnReceiveTrDataEvent e)
         {
             AddLine(String.Format("<OnReceiveTrData> : {0}, Count={1}"
@@ -92,21 +95,21 @@ namespace StockIndicator
                     chart_data = new CHART_DATAT[nRepeatCount];
                     for (int i = 0; i < nRepeatCount; i++)
                     {
-                        ref CHART_DATAT data = ref chart_data[i];
-                        data.O = Convert.ToInt32(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "시가"));
-                        data.H = Convert.ToInt32(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "고가"));
-                        data.L = Convert.ToInt32(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "저가"));
-                        data.C = Convert.ToInt32(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "현재가"));
-                        data.V = Convert.ToInt32(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "거래량"));
+                        ref CHART_DATAT data = ref chart_data[nRepeatCount - i - 1];
+                        data.O = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "시가"));
+                        data.H = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "고가"));
+                        data.L = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "저가"));
+                        data.C = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "현재가"));
+                        data.V = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "거래량"));
                         if (b분틱)
-                            data.T = Convert.ToInt64(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "체결시간"));
+                            data.T = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "체결시간"));
                         else
-                            data.T = Convert.ToInt64(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "일자"));
+                            data.T = Convert.ToDouble(axKHOpenAPI.GetCommData(e.sTrCode, e.sRQName, i, "일자"));
                     }
                     text_DataLength.Text = String.Format("Data Length = {0}", chart_data.Length);
                     for (int i = 0; i < nRepeatCount; i++)
                     {
-                        ref CHART_DATAT data = ref chart_data[i];
+                        ref CHART_DATAT data = ref chart_data[nRepeatCount - i - 1];
                         AddLine(String.Format("[{0:000}] 타임: {1}, 시가={2}, 고가={3}, 저가={4}, 종가={5}, 거래량={6}"
                             ,i, data.T, data.O, data.H, data.L, data.C, data.V));
                     }
@@ -139,18 +142,90 @@ namespace StockIndicator
 
         private void combo_indicator_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AddLine("Indicator Changed : " + e.AddedItems[0]);
+            if (e.AddedItems.Count > 0)
+            {
+                string? sIndicator = (string?)e.AddedItems[0];
+                if (sIndicator != null) Calculate(sIndicator);
+            }
         }
 
         private void btn_calc_Click(object sender, RoutedEventArgs e)
         {
+            Calculate(combo_indicator.Text);
+        }
 
+        private double GetParam(string szText, ref int nPos)
+        {
+            int nNumStartPos = -1;
+            for (; nPos < szText.Length; nPos++)
+            {
+                char c = szText[nPos];
+                if (nNumStartPos == -1 && c >= '0' && c <= '9')
+                {
+                    nNumStartPos = nPos;
+                } else if (nNumStartPos != -1 && !((c >= '0' && c <= '9') || c == '.'))
+                {
+                    string szNum = szText.Substring(nNumStartPos, nPos - nNumStartPos);
+                    return Convert.ToDouble(szNum);
+                }
+            }
+            if (nNumStartPos != -1)
+            {
+                string szNum = szText.Substring(nNumStartPos, nPos - nNumStartPos);
+                return Convert.ToDouble(szNum);
+            }
+            return double.NaN;
+        }
+
+        private void Calculate(string szIndiText)
+        {
+            if (chart_data.Length == 0)
+            {
+                AddLine($"Chart DataLength = {chart_data.Length}");
+            }
+
+            double[] O = CALC.Get_O(chart_data);
+            double[] H = CALC.Get_H(chart_data);
+            double[] L = CALC.Get_L(chart_data);
+            double[] C = CALC.Get_C(chart_data);
+            double[] V = CALC.Get_V(chart_data);
+            double[] T = CALC.Get_T(chart_data);
+
+
+            // 파라메터 얻기
+            List<double> Params = new List<double>();
+            int nPos = 0;
+            while (nPos < szIndiText.Length)
+            {
+                double dParam = GetParam(szIndiText, ref nPos);
+                if (dParam == double.NaN) break;
+                Params.Add(dParam);
+            }
+
+            double Result = double.NaN;
+            if (szIndiText.IndexOf("SMA") == 0)
+            {
+                Result = CALC.avg(C, (int)Params[0]);
+            } 
+            else if (szIndiText.IndexOf("EMA") == 0)
+            {
+                Result = CALC.eavg(C, (int)Params[0]);
+            }
+            else if (szIndiText.IndexOf("MACD") == 0)
+            {
+                double EmaShort = CALC.eavg(C, (int)Params[0]);
+                double EmaLong = CALC.eavg(C, (int)Params[1]);
+                Result = EmaShort - EmaLong;
+            }
+            AddLine($"{szIndiText} = {Result}");
         }
 
         private string[] roundTypes = { "일", "주", "월", "분", "틱"};
         private string[] roundTRCodes = { "OPT10081", "OPT10082", "OPT10083", "OPT10080", "OPT10079" };
         private string[] intervalTypes = { "1", "3", "5", "10", "15", "20", "30", "60", "120", "300", "600" };
-        private string[] Indicators = { "SMA5", "SMA10", "SMA20", "SMA60", "SMA120", "EMA5"
-        , "EMA10", "EMA20", "EMA60", "EMA120", "MACD", "RSI", "CCI"};
+        private string[] Indicators = { "SMA5", "SMA10", "SMA20", "SMA60", "SMA120"
+        , "EMA5", "EMA10", "EMA20", "EMA60", "EMA120", "MACD(12,26)"
+        //, "RSI14", "CCI9", "BB(20,2)"
+        };
     }
 }
