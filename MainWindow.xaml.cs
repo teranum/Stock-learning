@@ -7,13 +7,14 @@ using KHOpenApi.NET;
 
 namespace StockIndicator
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public struct CHART_DATAT
     {
         public double O, H, L, C, V, T;
     }
+
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
         private AxKHOpenAPI axKHOpenAPI;
