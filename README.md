@@ -13,7 +13,7 @@ Nuget: ta-lib
 - 실시간 주문 연동
 
 ![](./img/run-1.png)
-
+![](./img/run-2.png)
 
 # 64비트 개발은 64비트ActiveX 설치 필요
 https://github.com/terapark/64bit-kiwoom-openapi
