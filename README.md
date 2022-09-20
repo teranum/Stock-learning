@@ -2,7 +2,7 @@
 
 개발도구: VS2022, WPF, C#
 
-Nuget: ta-lib
+Nuget: KHOpenApi.NET
 
 개발순서:
 - 키움증권 OpenApi연결
