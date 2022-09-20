@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Interop;
 using KHOpenApi.NET;
 
 namespace StockIndicator
@@ -25,10 +25,9 @@ namespace StockIndicator
         {
             InitializeComponent();
             // ActiveX 세팅
-            axKHOpenAPI = new AxKHOpenAPI();
+            axKHOpenAPI = new AxKHOpenAPI(new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle());
             axKHOpenAPI.OnEventConnect += new _DKHOpenAPIEvents_OnEventConnectEventHandler(this.axKHOpenAPI_OnEventConnect);
             axKHOpenAPI.OnReceiveTrData += new _DKHOpenAPIEvents_OnReceiveTrDataEventHandler(this.axKHOpenAPI_OnReceiveTrData);
-            axContainer.Child = axKHOpenAPI;
             // 콤보박스 세팅
             for (int i = 0; i < roundTypes.Length; i++)
                 comdo_round.Items.Add(roundTypes[i]);

@@ -10,7 +10,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <WindowsFormsHost Name="axContainer" Height="0" Width="0" Background="Aqua" Margin="184,217,184,217"/>
         <Button x:Name="btn_login" Content="로그인" HorizontalAlignment="Left" Margin="16,12,0,0" VerticalAlignment="Top" Width="74" Click="btn_login_Click"/>
         <Button x:Name="btn_logout" Content="로그아웃" HorizontalAlignment="Left" Margin="148,12,0,0" VerticalAlignment="Top" Width="67" Click="btn_logout_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="16,42,0,0" TextWrapping="Wrap" Text="종목코드" VerticalAlignment="Top" Height="20"/>
