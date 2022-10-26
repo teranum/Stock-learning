@@ -5,12 +5,10 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <PlatformTarget>x64</PlatformTarget>
-    <UseWindowsForms>False</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KHOpenApi.NET" Version="1.0.7" />
+    <PackageReference Include="KHOpenApi.NET" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
